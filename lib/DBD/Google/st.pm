@@ -1,9 +1,9 @@
-package DBD::google::st;
+package DBD::Google::st;
 
 # ----------------------------------------------------------------------
 # $Id: st.pm,v 1.9 2003/02/07 04:39:19 dlc Exp $
 # ----------------------------------------------------------------------
-# DBD::google::st - Statement handle
+# DBD::Google::st - Statement handle
 # ----------------------------------------------------------------------
 
 use strict;
@@ -11,7 +11,7 @@ use base qw(DBD::_::st);
 use vars qw($VERSION $imp_data_size);
 
 use DBI;
-use DBD::google::parser;
+use DBD::Google::parser;
 
 $VERSION = sprintf "%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/;
 $imp_data_size = 0;

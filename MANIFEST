@@ -1,8 +1,8 @@
-lib/DBD/google/db.pm
-lib/DBD/google/dr.pm
-lib/DBD/google/parser.pm
-lib/DBD/google.pm
-lib/DBD/google/st.pm
+lib/DBD/Google/db.pm
+lib/DBD/Google/dr.pm
+lib/DBD/Google/parser.pm
+lib/DBD/Google.pm
+lib/DBD/Google/st.pm
 Makefile.PL
 MANIFEST
 MANIFEST.SKIP

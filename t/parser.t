@@ -2,10 +2,10 @@
 # vim: set ft=perl:
 
 use Data::Dumper;
-use DBD::google::parser;
+use DBD::Google::parser;
 use Test::More;
 
-sub p { DBD::google::parser->parse(@_) }
+sub p { DBD::Google::parser->parse(@_) }
 
 plan tests => 28;
 my $parsed;

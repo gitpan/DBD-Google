@@ -1,4 +1,4 @@
-package DBD::google::db;
+package DBD::Google::db;
 
 # ----------------------------------------------------------------------
 # $Id: db.pm,v 1.9 2003/01/09 18:23:32 dlc Exp $
@@ -20,7 +20,7 @@ sub prepare {
     my ($sth, $parsed, $google, $search, $search_opts);
 
     # Parse the SQL statement
-    $parsed = DBD::google::parser->parse($statement);
+    $parsed = DBD::Google::parser->parse($statement);
 
     # Get the google instance and %attr
     $google = $dbh->FETCH('driver_google');

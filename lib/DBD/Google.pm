@@ -1,7 +1,7 @@
-package DBD::google;
+package DBD::Google;
 
 # ----------------------------------------------------------------------
-# $Id: google.pm,v 1.14 2003/02/07 12:37:52 dlc Exp $
+# $Id: Google.pm,v 1.14 2003/02/07 12:37:52 dlc Exp $
 # ----------------------------------------------------------------------
 
 use strict;
@@ -9,10 +9,10 @@ use vars qw($VERSION);
 use vars qw($err $errstr $state $drh);
 
 use DBI;
-use DBD::google::dr;
-use DBD::google::db;
-use DBD::google::st;
-use DBD::google::parser;
+use DBD::Google::dr;
+use DBD::Google::db;
+use DBD::Google::st;
+use DBD::Google::parser;
 use Data::Dumper;
 
 # ----------------------------------------------------------------------
@@ -31,12 +31,12 @@ sub driver {
     unless ($drh) {
         my ($class, $attr) = @_;
         my %stuff = (
-            'Name'          => 'google',
+            'Name'          => 'Google',
             'Version'       => $VERSION,
             'Err'           => \$err,
             'Errstr'        => \$errstr,
             'State'         => \$state,
-            'Attribution'   => 'DBD::google - darren chamberlain <darren@cpan.org>',
+            'Attribution'   => 'DBD::Google - darren chamberlain <darren@cpan.org>',
             'AutoCommit'    => 1, # to avoid errors
         );
 
@@ -55,21 +55,21 @@ __END__
 
 =head1 NAME
 
-DBD::google - Treat Google as a datasource for DBI
+DBD::Google - Treat Google as a datasource for DBI
 
 =head1 SYNOPSIS
 
     use DBI;
 
-    my $dbh = DBI->connect("dbi:google:", $KEY);
-    my $sth = $dbh->prepare(qq[ SELECT title, URL FROM google WHERE q = "perl" ]);
+    my $dbh = DBI->connect("dbi:Google:", $KEY);
+    my $sth = $dbh->prepare(qq[ SELECT title, URL FROM Google WHERE q = "perl" ]);
 
     while (my $r = $sth->fetchrow_hashref) {
         ...
 
 =head1 DESCRIPTION
 
-DBD::google allows you to use Google as a datasource; google can be
+DBD::Google allows you to use Google as a datasource; Google can be
 queried using SQL I<SELECT> statements, and iterated over using
 standard DBI conventions.
 
@@ -83,7 +83,7 @@ Google?
 
 =head1 BASIC USAGE
 
-For the most part, use C<DBD::google> like you use any other DBD,
+For the most part, use C<DBD::Google> like you use any other DBD,
 except instead of going through the trouble of building and installing
 (or buying!) database software, and employing a DBA to manage your
 data, you can take advantage of Google's ability to do this for you.
@@ -91,23 +91,23 @@ Think of it as outsourcing your DBA, if you like.
 
 =head2 Connection Information
 
-The connection string should look like: C<dbi:google:>.  DBI requires
+The connection string should look like: C<dbi:Google:>.  DBI requires
 the trailing C<:>.
 
 Your Google API key should be specified in the username portion (the
 password is currently ignored; do whatever you want with it, but be
 warned that I might put that field to use some day):
 
-  my $dbh = DBI->connect("dbi:google:", "my key", undef, \%opts);
+  my $dbh = DBI->connect("dbi:Google:", "my key", undef, \%opts);
 
 Alternatively, you can specify a filename in the user portion; the
 first line of that file will be treated as the key:
 
-  my $dbh =DBI->connect("dbi:google:", 
-        File::Spec->catfile($ENV{HOME}, ".googlekey"))
+  my $dbh =DBI->connect("dbi:Google:", 
+        File::Spec->catfile($ENV{HOME}, ".Googlekey"))
 
 In addition to the standard DBI options, the fourth argument to
-connect can also include the following C<DBD::google> specific
+connect can also include the following C<DBD::Google> specific
 options, the full details of each of which can be found in
 L<Net::Google>:
 
@@ -143,16 +143,16 @@ Should C<Net::Google> be put into debug mode or not.  Boolean.
 
 The only supported SQL statement type is the I<SELECT> statement.
 Since there is no real "table" involved, I've created a hypothetical
-table, called I<google>; this table has one queryable field, I<q>
+table, called I<Google>; this table has one queryable field, I<q>
 (just like the public web-based interface).  The available columns are
 currently dictated by the data available from the underlying
 transport, which is the Google SOAP API (see
-L<http://www.google.com/apis|http://www.google.com/apis>), as
+L<http://www.Google.com/apis|http://www.Google.com/apis>), as
 implemented by Aaron Straup Cope's C<Net::Google> module.
 
 The basic SQL syntax supported looks like:
 
-  SELECT @fields FROM google WHERE q = '$query'
+  SELECT @fields FROM Google WHERE q = '$query'
 
 There is also an optional LIMIT clause, the syntax of which is similar
 to that of MySQL's LIMIT clause; it takes a pair: offset from 0,
@@ -160,7 +160,7 @@ number of results.  In practice, Google returns 10 results at a time
 by default, so specifying a high LIMIT clause at the beginning might
 make sense for many queries.
 
-The list of available fields in the I<google> table includes:
+The list of available fields in the I<Google> table includes:
 
 =over 16
 
@@ -201,11 +201,11 @@ Returns the directory category of the result.
 
 The column specifications can include aliases:
 
-  SELECT directoryCategory as DC FROM google WHERE...
+  SELECT directoryCategory as DC FROM Google WHERE...
 
 Finally, there are a few function that can be called on fields:
 
-  SELECT title, html_encode(url) FROM google WHERE q = '$stuff'
+  SELECT title, html_encode(url) FROM Google WHERE q = '$stuff'
 
 The available functions include:
 
@@ -229,7 +229,7 @@ this function can be used to undo that damage.
 
 Functions an aliases can be combined:
 
-  SELECT html_strip(snippet) as stripped_snippet FROM google...
+  SELECT html_strip(snippet) as stripped_snippet FROM Google...
 
 Unsupported SQL includes ORDER BY clauses (Google does this, and
 provides no interface to modify it), HAVING clauses, JOINs of
@@ -239,13 +239,13 @@ explicitly mentioned above.
 
 =head1 INSTALLATION
 
-C<DBD::google> is pure perl, and has a few module requirements:
+C<DBD::Google> is pure perl, and has a few module requirements:
 
 =over 16
 
 =item Net::Google
 
-This is the heart of the module; C<DBD::google> is basically a
+This is the heart of the module; C<DBD::Google> is basically a
 DBI-compliant wrapper around C<Net::Google>.
 
 =item HTML::Entities, URI::Escape
@@ -264,7 +264,7 @@ To install:
   $ make
   $ make test
   # make install
-  $ echo 'I love your module!' | mail darren@cpan.org -s "DBD::google"
+  $ echo 'I love your module!' | mail darren@cpan.org -s "DBD::Google"
 
 The last step is optional; the others are not.
 
@@ -287,7 +287,7 @@ formats the results nicely:
     SELECT
       title, URL, hostName
     FROM
-      google
+      Google
     WHERE
       q = "$query"
   ~;
@@ -295,16 +295,16 @@ formats the results nicely:
   # DBI/DBD options:
   my %opts = ( RaiseError => 1,  # Standard DBI options
                PrintError => 0,
-               lr => [ 'en' ],   # DBD::google options
+               lr => [ 'en' ],   # DBD::Google options
                oe => "utf-8",
                ie => "utf-8",
              );
 
   # Get API key
-  my $keyfile = glob "~/.googlekey";
+  my $keyfile = glob "~/.Googlekey";
 
   # Get database handle
-  my $dbh = DBI->connect("dbi:google:", $keyfile, undef, \%opts);
+  my $dbh = DBI->connect("dbi:Google:", $keyfile, undef, \%opts);
 
   # Create Text::TabularDisplay instance, and set the columns
   my $table = Text::TabularDisplay->new;
@@ -385,7 +385,7 @@ These are described in L<Net::Google::Response>.
 Unknown functions that look like Perl package::function names should
 probably be treated as such, and AUTOLOADed:
 
-  SELECT Foo::frob(title) FROM google WHERE q = "perl"
+  SELECT Foo::frob(title) FROM Google WHERE q = "perl"
 
 Would do, effectively:
 
@@ -395,7 +395,7 @@ Would do, effectively:
 I'm slightly afraid of where this could lead, though:
 
   SELECT title, LWP::Simple::get(url) as WholeDamnThing
-  FROM   google
+  FROM   Google
   WHERE  q = "perl apache"
   LIMIT  0, 100
 
@@ -408,9 +408,9 @@ On the other hand, this is definitely related to the previous item; the
 parser could be extended to accept function names in method format:
 
   SELECT title, URI->new(URL), Net::hostent->new(hostName)
-  FROM google WHERE q = "perl"
+  FROM Google WHERE q = "perl"
 
-=item DESCRIBE statement on the C<google> table
+=item DESCRIBE statement on the C<Google> table
 
 It would be nice to provide a little introspection.
 
@@ -436,7 +436,7 @@ useful, so I can refine the test suite (and the parser itself, of
 course).
 
 There are probably a few bugs, though I don't know of any.  Please
-report them via the DBD::google queue at
+report them via the DBD::Google queue at
 E<lt>http://rt.cpan.org/E<gt>.
 
 =head1 SEE ALSO 

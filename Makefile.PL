@@ -18,7 +18,7 @@ my %clean = (
 );
 
 WriteMakefile(
-    NAME        => "DBD::google",
+    NAME        => "DBD::Google",
     VERSION     => "0.05",
     PREREQ_PM   => \%PREREQ_PM,
     clean       => \%clean,

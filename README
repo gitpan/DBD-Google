@@ -1,17 +1,17 @@
 NAME
-    DBD::google - Treat Google as a datasource for DBI
+    DBD::Google - Treat Google as a datasource for DBI
 
 SYNOPSIS
         use DBI;
 
-        my $dbh = DBI->connect("dbi:google:", $KEY);
-        my $sth = $dbh->prepare(qq[ SELECT title, URL FROM google WHERE q = "perl" ]);
+        my $dbh = DBI->connect("dbi:Google:", $KEY);
+        my $sth = $dbh->prepare(qq[ SELECT title, URL FROM Google WHERE q = "perl" ]);
 
         while (my $r = $sth->fetchrow_hashref) {
             ...
 
 DESCRIPTION
-    DBD::google allows you to use Google as a datasource; google can be
+    DBD::Google allows you to use Google as a datasource; Google can be
     queried using SQL *SELECT* statements, and iterated over using standard
     DBI conventions.
 
@@ -23,7 +23,7 @@ WHY?
     Google?
 
 BASIC USAGE
-    For the most part, use "DBD::google" like you use any other DBD, except
+    For the most part, use "DBD::Google" like you use any other DBD, except
     instead of going through the trouble of building and installing (or
     buying!) database software, and employing a DBA to manage your data, you
     can take advantage of Google's ability to do this for you. Think of it
@@ -31,23 +31,23 @@ BASIC USAGE
 
   Connection Information
 
-    The connection string should look like: "dbi:google:". DBI requires the
+    The connection string should look like: "dbi:Google:". DBI requires the
     trailing ":".
 
     Your Google API key should be specified in the username portion (the
     password is currently ignored; do whatever you want with it, but be
     warned that I might put that field to use some day):
 
-      my $dbh = DBI->connect("dbi:google:", "my key", undef, \%opts);
+      my $dbh = DBI->connect("dbi:Google:", "my key", undef, \%opts);
 
     Alternatively, you can specify a filename in the user portion; the first
     line of that file will be treated as the key:
 
-      my $dbh =DBI->connect("dbi:google:", 
-            File::Spec->catfile($ENV{HOME}, ".googlekey"))
+      my $dbh =DBI->connect("dbi:Google:", 
+            File::Spec->catfile($ENV{HOME}, ".Googlekey"))
 
     In addition to the standard DBI options, the fourth argument to connect
-    can also include the following "DBD::google" specific options, the full
+    can also include the following "DBD::Google" specific options, the full
     details of each of which can be found in the Net::Google manpage:
 
     ie              Input Encoding. String, e.g., "utf-8".
@@ -67,15 +67,15 @@ BASIC USAGE
 
     The only supported SQL statement type is the *SELECT* statement. Since
     there is no real "table" involved, I've created a hypothetical table,
-    called *google*; this table has one queryable field, *q* (just like the
+    called *Google*; this table has one queryable field, *q* (just like the
     public web-based interface). The available columns are currently
     dictated by the data available from the underlying transport, which is
-    the Google SOAP API (see http://www.google.com/apis), as implemented by
+    the Google SOAP API (see http://www.Google.com/apis), as implemented by
     Aaron Straup Cope's "Net::Google" module.
 
     The basic SQL syntax supported looks like:
 
-      SELECT @fields FROM google WHERE q = '$query'
+      SELECT @fields FROM Google WHERE q = '$query'
 
     There is also an optional LIMIT clause, the syntax of which is similar
     to that of MySQL's LIMIT clause; it takes a pair: offset from 0, number
@@ -83,7 +83,7 @@ BASIC USAGE
     so specifying a high LIMIT clause at the beginning might make sense for
     many queries.
 
-    The list of available fields in the *google* table includes:
+    The list of available fields in the *Google* table includes:
 
     title           Returns the title of the result, as a string.
 
@@ -106,11 +106,11 @@ BASIC USAGE
 
     The column specifications can include aliases:
 
-      SELECT directoryCategory as DC FROM google WHERE...
+      SELECT directoryCategory as DC FROM Google WHERE...
 
     Finally, there are a few function that can be called on fields:
 
-      SELECT title, html_encode(url) FROM google WHERE q = '$stuff'
+      SELECT title, html_encode(url) FROM Google WHERE q = '$stuff'
 
     The available functions include:
 
@@ -125,7 +125,7 @@ BASIC USAGE
 
     Functions an aliases can be combined:
 
-      SELECT html_strip(snippet) as stripped_snippet FROM google...
+      SELECT html_strip(snippet) as stripped_snippet FROM Google...
 
     Unsupported SQL includes ORDER BY clauses (Google does this, and
     provides no interface to modify it), HAVING clauses, JOINs of any type
@@ -134,9 +134,9 @@ BASIC USAGE
     mentioned above.
 
 INSTALLATION
-    "DBD::google" is pure perl, and has a few module requirements:
+    "DBD::Google" is pure perl, and has a few module requirements:
 
-    Net::Google     This is the heart of the module; "DBD::google" is
+    Net::Google     This is the heart of the module; "DBD::Google" is
                     basically a DBI-compliant wrapper around "Net::Google".
 
     HTML::Entities, URI::Escape
@@ -151,7 +151,7 @@ INSTALLATION
       $ make
       $ make test
       # make install
-      $ echo 'I love your module!' | mail darren@cpan.org -s "DBD::google"
+      $ echo 'I love your module!' | mail darren@cpan.org -s "DBD::Google"
 
     The last step is optional; the others are not.
 
@@ -173,7 +173,7 @@ EXAMPLES
         SELECT
           title, URL, hostName
         FROM
-          google
+          Google
         WHERE
           q = "$query"
       ~;
@@ -181,16 +181,16 @@ EXAMPLES
       # DBI/DBD options:
       my %opts = ( RaiseError => 1,  # Standard DBI options
                    PrintError => 0,
-                   lr => [ 'en' ],   # DBD::google options
+                   lr => [ 'en' ],   # DBD::Google options
                    oe => "utf-8",
                    ie => "utf-8",
                  );
 
       # Get API key
-      my $keyfile = glob "~/.googlekey";
+      my $keyfile = glob "~/.Googlekey";
 
       # Get database handle
-      my $dbh = DBI->connect("dbi:google:", $keyfile, undef, \%opts);
+      my $dbh = DBI->connect("dbi:Google:", $keyfile, undef, \%opts);
 
       # Create Text::TabularDisplay instance, and set the columns
       my $table = Text::TabularDisplay->new;
@@ -249,7 +249,7 @@ TODO
         Unknown functions that look like Perl package::function names should
         probably be treated as such, and AUTOLOADed:
 
-          SELECT Foo::frob(title) FROM google WHERE q = "perl"
+          SELECT Foo::frob(title) FROM Google WHERE q = "perl"
 
         Would do, effectively:
 
@@ -259,7 +259,7 @@ TODO
         I'm slightly afraid of where this could lead, though:
 
           SELECT title, LWP::Simple::get(url) as WholeDamnThing
-          FROM   google
+          FROM   Google
           WHERE  q = "perl apache"
           LIMIT  0, 100
 
@@ -272,9 +272,9 @@ TODO
         format:
 
           SELECT title, URI->new(URL), Net::hostent->new(hostName)
-          FROM google WHERE q = "perl"
+          FROM Google WHERE q = "perl"
 
-    DESCRIBE statement on the "google" table
+    DESCRIBE statement on the "Google" table
         It would be nice to provide a little introspection.
 
 CAVEATS, BUGS, IMPROVEMENTS, SUGGESTIONS, FOIBLES, ETC
@@ -296,7 +296,7 @@ CAVEATS, BUGS, IMPROVEMENTS, SUGGESTIONS, FOIBLES, ETC
     course).
 
     There are probably a few bugs, though I don't know of any. Please report
-    them via the DBD::google queue at <http://rt.cpan.org/>.
+    them via the DBD::Google queue at <http://rt.cpan.org/>.
 
 SEE ALSO
     the DBI manpage, the DBI::DBD manpage, the Net::Google manpage, the

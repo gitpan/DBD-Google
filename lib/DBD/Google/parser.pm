@@ -1,4 +1,4 @@
-package DBD::google::parser;
+package DBD::Google::parser;
 
 # ----------------------------------------------------------------------
 # $Id: parser.pm,v 1.13 2003/02/07 04:12:03 dlc Exp $
@@ -152,7 +152,7 @@ sub parse {
         @limit = (0, $limit[0])
     }
 
-    $parsed = DBD::google::Parsed::SQL->new;
+    $parsed = DBD::Google::Parsed::SQL->new;
     $parsed->columns(\@columns);
     $parsed->limit(\@limit);
     $parsed->where($where);
@@ -167,7 +167,7 @@ sub parse {
 # full class name all over the place.
 # ----------------------------------------------------------------------
 sub Column {
-    return DBD::google::Parsed::Column->new->init(
+    return DBD::Google::Parsed::Column->new->init(
         function => $functions{'default'},
         @_
     );
@@ -189,7 +189,7 @@ sub striphtml {
 # This internal package defines a cute little class to encapsulate
 # a column.
 # ----------------------------------------------------------------------
-package DBD::google::Parsed::Column;
+package DBD::Google::Parsed::Column;
 
 use Class::Struct;
 
@@ -215,7 +215,7 @@ sub init {
 # ----------------------------------------------------------------------
 # This internal package represents a parsed SQL statement.
 # ----------------------------------------------------------------------
-package DBD::google::Parsed::SQL;
+package DBD::Google::Parsed::SQL;
 
 use Class::Struct;
 

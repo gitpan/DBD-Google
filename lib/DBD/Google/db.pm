@@ -13,7 +13,7 @@ use vars qw($VERSION $imp_data_size);
 use DBI;
 use DBD::Google::parser;
 
-$VERSION = "0.10";  # $Date: 2004/03/04 23:21:22 $
+$VERSION = "2.00";  # $Date: 2004/03/04 23:21:22 $
 $imp_data_size = 0;
 
 sub prepare {

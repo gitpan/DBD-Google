@@ -16,7 +16,7 @@ use DBI;
 use Net::Google;
 use Symbol qw(gensym);
 
-$VERSION = "0.10";  # $Date: 2004/02/04 17:27:45 $
+$VERSION = "2.00";  # $Date: 2004/02/04 17:27:45 $
 $imp_data_size = 0;
 
 # These are valid Net::Google::Search options

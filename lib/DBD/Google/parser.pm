@@ -23,7 +23,7 @@ use HTML::Entities qw(encode_entities);
 use SQL::Parser;
 use URI::Escape qw(uri_escape);
 
-$VERSION = "0.10";  # $Date: 2004/02/04 17:27:45 $
+$VERSION = "2.00";  # $Date: 2004/02/04 17:27:45 $
 
 # Package-scoped variables
 # These are not lexicals so that they can be used in tests

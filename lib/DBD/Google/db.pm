@@ -1,7 +1,7 @@
 package DBD::Google::db;
 
 # ----------------------------------------------------------------------
-# $Id: db.pm,v 1.9 2003/01/09 18:23:32 dlc Exp $
+# $Id: db.pm,v 1.2 2004/03/04 23:21:22 dlc Exp $
 # ----------------------------------------------------------------------
 # The database handle (dbh)
 # ----------------------------------------------------------------------
@@ -11,30 +11,35 @@ use base qw(DBD::_::db);
 use vars qw($VERSION $imp_data_size);
 
 use DBI;
+use DBD::Google::parser;
 
-$VERSION = sprintf "%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/;
+$VERSION = "0.10";  # $Date: 2004/03/04 23:21:22 $
 $imp_data_size = 0;
 
 sub prepare {
     my ($dbh, $statement, @attr) = @_;
     my ($sth, $parsed, $google, $search, $search_opts);
 
-    # Parse the SQL statement
-    $parsed = DBD::Google::parser->parse($statement);
+    my $parser = DBD::Google::parser->new;
+    $parser->parse($statement)
+        or die $parser->errstr;
+    $parsed = $parser->decompose;
 
     # Get the google instance and %attr
     $google = $dbh->FETCH('driver_google');
     $search_opts = $dbh->FETCH('driver_google_opts');
 
     # Create the search object
+    # XXX Start work here -- need a way to retrieve the column
+    # names, limit items, and where clause from $parsed
     $search = $google->search(%$search_opts);
-    $search->query($parsed->where);
-    $search->starts_at($parsed->start);
-    $search->max_results($parsed->end);
+    $search->query($parsed->{'WHERE'});
+    $search->starts_at($parsed->{'LIMIT'}->{'offset'});
+    $search->max_results($parsed->{'LIMIT'}->{'limit'});
 
     $sth = DBI::_new_sth($dbh, {
         'Statement' => $statement,
-        'Columns' => $parsed->columns,
+        'Columns' => $parsed->{'COLUMNS'},
         'GoogleSearch' => $search,
     });
 
@@ -90,6 +95,14 @@ sub rollback {
         if $dbh->FETCH('Warn');
 
     0;
+}
+
+sub get_info {
+    my($dbh, $info_type) = @_;
+    require DBD::Google::GetInfo;
+    my $v = $DBD::Google::GetInfo::info{int($info_type)};
+    $v = $v->($dbh) if ref $v eq 'CODE';
+    return $v;
 }
 
 1;

@@ -1,7 +1,7 @@
 package DBD::Google::st;
 
 # ----------------------------------------------------------------------
-# $Id: st.pm,v 1.9 2003/02/07 04:39:19 dlc Exp $
+# $Id: st.pm,v 1.1 2004/02/04 17:27:45 dlc Exp $
 # ----------------------------------------------------------------------
 # DBD::Google::st - Statement handle
 # ----------------------------------------------------------------------
@@ -11,9 +11,8 @@ use base qw(DBD::_::st);
 use vars qw($VERSION $imp_data_size);
 
 use DBI;
-use DBD::Google::parser;
 
-$VERSION = sprintf "%d.%02d", q$Revision: 1.9 $ =~ /(\d+)\.(\d+)/;
+$VERSION = "0.10";  # $Date: 2004/02/04 17:27:45 $
 $imp_data_size = 0;
 
 # ----------------------------------------------------------------------
@@ -33,7 +32,7 @@ sub execute {
     @columns = @{ $sth->{'Columns'} };
 
     # This is where fetchrow_hashref etc get their names from
-    $sth->{'NAME'} = [ map { $_->alias } @columns ];
+    $sth->{'NAME'} = [ map { $_->{'ALIAS'} } @columns ];
 
     # This executes the search
     $results = $search->results;
@@ -42,7 +41,7 @@ sub execute {
 
         for $column (@columns) {
             my ($name, $method, $value, $function);
-            $name = lc $column->name;
+            $name = lc $column->{'FIELD'};
 
             # These are in the same order as described
             # in Net::Google::Response
@@ -64,11 +63,13 @@ sub execute {
                 $method = 'directoryCategory';
             }
 
-            $value = $method ? $result->$method() : "";
+            $value = defined $method ? $result->$method() : "";
 
-            $function = $column->function;
-            eval { $value = &$function($value); };
-            push @this, ($@ or $value);
+            $function = $column->{'FUNCTION'};
+            eval { $value = &$function($search, $value); }
+                if defined $function;
+
+            push @this, ($@ or $value or "");
         }
 
         push @data, \@this;
@@ -104,12 +105,28 @@ sub rows {
 # Alas! This currently doesn't work.
 sub totalrows {
     my $sth = shift;
-    return $sth->FETCH('driver_totalrows');
+    return $sth->estimateTotalResultsNumber();
 }
 
 # Returns available tables
-sub table_info { return "google" }
+sub table_info { return "Google" }
+
+# Implement metadata functions
+{   no strict qw(refs);
+    for my $sub (qw(documentFiltering searchComments searchQuery
+                    estimateTotalResultsNumber estimateIsExact
+                    startIndex endIndex searchTips searchTime)) {
+        *{$sub} = sub {
+            my $sth = shift;
+            my $search = $sth->{'GoogleSearch'};
+            return $search->$sub() if defined $search;
+            return;
+        };
+    }
+}
 
 1;
+
+sub DESTROY { 1 }
 
 __END__

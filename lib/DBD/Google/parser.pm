@@ -1,8 +1,6 @@
 package DBD::Google::parser;
 
 # ----------------------------------------------------------------------
-# $Id: parser.pm,v 1.1 2004/02/04 17:27:45 dlc Exp $
-# ----------------------------------------------------------------------
 # This package needs to subclass SQL::Parser, in order that the
 # functions defined can be used.  WIth SQL::Parser 1.005, the
 # SELECT_CLAUSE method needs to be overridden.
@@ -23,7 +21,7 @@ use HTML::Entities qw(encode_entities);
 use SQL::Parser;
 use URI::Escape qw(uri_escape);
 
-$VERSION = "2.00";  # $Date: 2004/02/04 17:27:45 $
+$VERSION = "2.00";
 
 # Package-scoped variables
 # These are not lexicals so that they can be used in tests
@@ -31,7 +29,7 @@ $FIELD_RE = '[a-zA-Z][a-zA-Z0-9_]';
 $FUNC_RE = qr/$FIELD_RE*(?:::$FIELD_RE*)*(?:[-]>$FIELD_RE*)?/; # methods?
 $FIELD_RE = qr/$FIELD_RE*/;
 
-my @default_columns = sort qw( title URL snippet summary
+my @default_columns = sort qw( title url snippet summary
                                cachedSize directoryTitle
                                hostName directoryCategory
                              );

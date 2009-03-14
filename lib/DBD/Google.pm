@@ -1,9 +1,5 @@
 package DBD::Google;
 
-# ----------------------------------------------------------------------
-# $Id: Google.pm,v 1.1 2004/02/04 17:27:45 dlc Exp $
-# ----------------------------------------------------------------------
-
 use strict;
 use vars qw($VERSION $REVISION);
 use vars qw($err $errstr $state $drh);
@@ -14,8 +10,8 @@ use DBD::Google::db;
 use DBD::Google::st;
 use DBD::Google::parser;
 
-$VERSION = "0.10";    # $Date: 2004/02/04 17:27:45 $
-$REVISION = sprintf "%d.%02d", q$Revision: 1.1 $ =~ /(\d+)\.(\d+)/;
+$VERSION = "0.50";
+$REVISION = $VERSION;
 
 # ----------------------------------------------------------------------
 # Standard DBI globals: $DBI::err, $DBI::errstr, etc

@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               DBD-Google
-version:            0.50
+version:            0.51
 abstract:           ~
 author:  []
 license:            unknown
@@ -8,7 +8,7 @@ distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    DBI:             1.39
+    DBI:             1.5
     HTML::Entities:  0
     Net::Google:     0.6
     SQL::Statement:  1
